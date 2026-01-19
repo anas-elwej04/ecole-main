@@ -25,4 +25,8 @@ public class Enseignant {
 
     @OneToMany(mappedBy = "enseignant", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Salle> salles;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "matiere_id")
+    private Matiere matiere;
 }

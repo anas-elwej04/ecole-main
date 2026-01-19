@@ -19,7 +19,13 @@ public class Seance {
 
     private LocalDateTime dateHeureFin;
 
-    private String matiere;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "matiere_id")
+    private Matiere matiere;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "enseignant_id")
+    private Enseignant enseignant;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "salle_id")

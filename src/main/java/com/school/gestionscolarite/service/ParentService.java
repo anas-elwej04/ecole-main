@@ -37,7 +37,11 @@ public class ParentService {
             parent.setNom(parentDetails.getNom());
             parent.setPrenom(parentDetails.getPrenom());
             parent.setTelephone(parentDetails.getTelephone());
+            parent.setEmail(parentDetails.getEmail());
             parent.setEleves(parentDetails.getEleves());
+            if (parentDetails.getPassword() != null && !parentDetails.getPassword().isEmpty()) {
+                parent.setPassword(passwordEncoder.encode(parentDetails.getPassword()));
+            }
             return parentRepository.save(parent);
         }).orElse(null);
     }

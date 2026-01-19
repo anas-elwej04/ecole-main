@@ -16,13 +16,12 @@ public class Notes {
 
     private Double valeur; // la note (ex: 15.5)
 
-    private String matiere; // optionnel
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "matiere_id")
+    private Matiere matiere;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "eleve_id")
     private Eleve eleve;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "seance_id", nullable = true)
-    private Seance seance;
 }

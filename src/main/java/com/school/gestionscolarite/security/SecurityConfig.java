@@ -31,7 +31,7 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/auth/**").permitAll()
+                        .requestMatchers("/api/auth/**", "/api/login").permitAll()
                         .requestMatchers("/api/admins/**", "/api/eleves/**", "/api/enseignants/**", "/api/matieres/**",
                                 "/api/notes/**", "/api/parents/**", "/api/salles/**", "/api/seances/**")
                         .permitAll() // Allow full access for testing

@@ -40,6 +40,9 @@ public class EleveService {
             eleve.setAdresse(eleveDetails.getAdresse());
             eleve.setClasse(eleveDetails.getClasse());
             eleve.setParent(eleveDetails.getParent());
+            if (eleveDetails.getPassword() != null && !eleveDetails.getPassword().isEmpty()) {
+                eleve.setPassword(passwordEncoder.encode(eleveDetails.getPassword()));
+            }
             return eleveRepository.save(eleve);
         }).orElse(null);
     }

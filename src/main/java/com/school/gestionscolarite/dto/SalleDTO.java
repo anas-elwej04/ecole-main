@@ -7,5 +7,5 @@ public class SalleDTO {
     private Long id;
     private String nom;
     private String localisation;
-    private Long enseignantId;  // id de l'enseignant lié
+    private Long enseignantId; // id de l'enseignant lié
 }

@@ -1,6 +1,5 @@
 package com.school.gestionscolarite.service;
 
-
 import com.school.gestionscolarite.entity.Matiere;
 import com.school.gestionscolarite.repository.MatiereRepository;
 import org.springframework.stereotype.Service;
@@ -33,8 +32,8 @@ public class MatiereService {
         return matiereRepository.findById(id)
                 .map(matiere -> {
                     matiere.setNom(matiereDetails.getNom());
-                    matiere.setCode(matiereDetails.getCode());
                     matiere.setCharges(matiereDetails.getCharges());
+                    matiere.setCoefficient(matiereDetails.getCoefficient());
                     return matiereRepository.save(matiere);
                 })
                 .orElse(null);

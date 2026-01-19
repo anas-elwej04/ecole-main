@@ -1,9 +1,12 @@
 package com.school.gestionscolarite.controller;
 
 import com.school.gestionscolarite.dto.EnseignantDTO;
+import com.school.gestionscolarite.dto.MatiereDTO;
 import com.school.gestionscolarite.entity.Enseignant;
+import com.school.gestionscolarite.entity.Matiere;
 import com.school.gestionscolarite.entity.Salle;
 import com.school.gestionscolarite.service.EnseignantService;
+import com.school.gestionscolarite.service.MatiereService;
 import com.school.gestionscolarite.service.SalleService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,10 +22,13 @@ public class EnseignantController {
 
     private final EnseignantService enseignantService;
     private final SalleService salleService;
+    private final MatiereService matiereService;
 
-    public EnseignantController(EnseignantService enseignantService, SalleService salleService) {
+    public EnseignantController(EnseignantService enseignantService, SalleService salleService,
+            MatiereService matiereService) {
         this.enseignantService = enseignantService;
         this.salleService = salleService;
+        this.matiereService = matiereService;
     }
 
     @GetMapping
@@ -76,6 +82,10 @@ public class EnseignantController {
                     .map(Salle::getId)
                     .collect(Collectors.toList()));
         }
+        if (enseignant.getMatiere() != null) {
+            dto.setMatiereId(enseignant.getMatiere().getId());
+            dto.setMatiere(this.convertMatiereToDTO(enseignant.getMatiere()));
+        }
         return dto;
     }
 
@@ -93,6 +103,18 @@ public class EnseignantController {
             }
             enseignant.setSalles(salles);
         }
+        if (dto.getMatiereId() != null) {
+            matiereService.getMatiereById(dto.getMatiereId()).ifPresent(enseignant::setMatiere);
+        }
         return enseignant;
+    }
+
+    private MatiereDTO convertMatiereToDTO(Matiere matiere) {
+        MatiereDTO dto = new MatiereDTO();
+        dto.setId(matiere.getId());
+        dto.setNom(matiere.getNom());
+        dto.setCharges(matiere.getCharges());
+        dto.setCoefficient(matiere.getCoefficient());
+        return dto;
     }
 }

@@ -3,6 +3,8 @@ package com.school.gestionscolarite.controller;
 import com.school.gestionscolarite.entity.Seance;
 import com.school.gestionscolarite.service.SeanceService;
 import com.school.gestionscolarite.service.SalleService;
+import com.school.gestionscolarite.service.MatiereService;
+import com.school.gestionscolarite.service.EnseignantService;
 import com.school.gestionscolarite.dto.SeanceDTO;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,23 +18,29 @@ import java.util.stream.Collectors;
 public class SeanceController {
 
     private final SeanceService seanceService;
-    private final com.school.gestionscolarite.service.SalleService salleService;
+    private final SalleService salleService;
+    private final MatiereService matiereService;
+    private final EnseignantService enseignantService;
 
     public SeanceController(SeanceService seanceService,
-            com.school.gestionscolarite.service.SalleService salleService) {
+            SalleService salleService,
+            MatiereService matiereService,
+            EnseignantService enseignantService) {
         this.seanceService = seanceService;
         this.salleService = salleService;
+        this.matiereService = matiereService;
+        this.enseignantService = enseignantService;
     }
 
     @GetMapping
-    public java.util.List<com.school.gestionscolarite.dto.SeanceDTO> getAllSeances() {
+    public List<SeanceDTO> getAllSeances() {
         return seanceService.getAllSeances().stream()
                 .map(this::convertToDTO)
-                .collect(java.util.stream.Collectors.toList());
+                .collect(Collectors.toList());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<com.school.gestionscolarite.dto.SeanceDTO> getSeanceById(@PathVariable Long id) {
+    public ResponseEntity<SeanceDTO> getSeanceById(@PathVariable Long id) {
         return seanceService.getSeanceById(id)
                 .map(this::convertToDTO)
                 .map(ResponseEntity::ok)
@@ -40,16 +48,16 @@ public class SeanceController {
     }
 
     @PostMapping
-    public com.school.gestionscolarite.dto.SeanceDTO createSeance(
-            @RequestBody com.school.gestionscolarite.dto.SeanceDTO seanceDTO) {
+    public SeanceDTO createSeance(
+            @RequestBody SeanceDTO seanceDTO) {
         Seance seance = convertToEntity(seanceDTO);
         Seance createdSeance = seanceService.createSeance(seance);
         return convertToDTO(createdSeance);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<com.school.gestionscolarite.dto.SeanceDTO> updateSeance(@PathVariable Long id,
-            @RequestBody com.school.gestionscolarite.dto.SeanceDTO seanceDTO) {
+    public ResponseEntity<SeanceDTO> updateSeance(@PathVariable Long id,
+            @RequestBody SeanceDTO seanceDTO) {
         Seance seanceDetails = convertToEntity(seanceDTO);
         Seance updatedSeance = seanceService.updateSeance(id, seanceDetails);
         if (updatedSeance == null) {
@@ -64,24 +72,37 @@ public class SeanceController {
         return ResponseEntity.noContent().build();
     }
 
-    private com.school.gestionscolarite.dto.SeanceDTO convertToDTO(Seance seance) {
-        com.school.gestionscolarite.dto.SeanceDTO dto = new com.school.gestionscolarite.dto.SeanceDTO();
+    private SeanceDTO convertToDTO(Seance seance) {
+        SeanceDTO dto = new SeanceDTO();
         dto.setId(seance.getId());
         dto.setDateHeureDebut(seance.getDateHeureDebut());
         dto.setDateHeureFin(seance.getDateHeureFin());
-        dto.setMatiere(seance.getMatiere());
+        if (seance.getMatiere() != null) {
+            dto.setMatiereId(seance.getMatiere().getId());
+            dto.setMatiereNom(seance.getMatiere().getNom());
+        }
+        if (seance.getEnseignant() != null) {
+            dto.setEnseignantId(seance.getEnseignant().getId());
+            dto.setEnseignantNom(seance.getEnseignant().getNom() + " " + seance.getEnseignant().getPrenom());
+        }
         if (seance.getSalle() != null) {
             dto.setSalleId(seance.getSalle().getId());
+            dto.setSalleNom(seance.getSalle().getNom());
         }
         return dto;
     }
 
-    private Seance convertToEntity(com.school.gestionscolarite.dto.SeanceDTO dto) {
+    private Seance convertToEntity(SeanceDTO dto) {
         Seance seance = new Seance();
         seance.setId(dto.getId()); // updates
         seance.setDateHeureDebut(dto.getDateHeureDebut());
         seance.setDateHeureFin(dto.getDateHeureFin());
-        seance.setMatiere(dto.getMatiere());
+        if (dto.getMatiereId() != null) {
+            matiereService.getMatiereById(dto.getMatiereId()).ifPresent(seance::setMatiere);
+        }
+        if (dto.getEnseignantId() != null) {
+            enseignantService.getEnseignantById(dto.getEnseignantId()).ifPresent(seance::setEnseignant);
+        }
         if (dto.getSalleId() != null) {
             salleService.getSalleById(dto.getSalleId()).ifPresent(seance::setSalle);
         }

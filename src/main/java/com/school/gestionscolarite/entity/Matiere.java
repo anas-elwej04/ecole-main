@@ -16,7 +16,7 @@ public class Matiere {
 
     private String nom;
 
-    private String code;
-
     private int charges; // nombre d'heures
+
+    private Double coefficient;
 }

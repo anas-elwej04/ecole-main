@@ -2,14 +2,10 @@ package com.school.gestionscolarite.controller;
 
 import com.school.gestionscolarite.entity.Notes;
 import com.school.gestionscolarite.service.NotesService;
-import com.school.gestionscolarite.service.EleveService;
-import com.school.gestionscolarite.service.SeanceService;
-import com.school.gestionscolarite.dto.NotesDTO;
+import com.school.gestionscolarite.service.MatiereService;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/notes")
@@ -18,14 +14,14 @@ public class NotesController {
 
     private final NotesService notesService;
     private final com.school.gestionscolarite.service.EleveService eleveService;
-    private final com.school.gestionscolarite.service.SeanceService seanceService;
+    private final MatiereService matiereService;
 
     public NotesController(NotesService notesService,
             com.school.gestionscolarite.service.EleveService eleveService,
-            com.school.gestionscolarite.service.SeanceService seanceService) {
+            MatiereService matiereService) {
         this.notesService = notesService;
         this.eleveService = eleveService;
-        this.seanceService = seanceService;
+        this.matiereService = matiereService;
     }
 
     @GetMapping
@@ -72,13 +68,15 @@ public class NotesController {
         com.school.gestionscolarite.dto.NotesDTO dto = new com.school.gestionscolarite.dto.NotesDTO();
         dto.setId(notes.getId());
         dto.setValeur(notes.getValeur());
-        dto.setMatiere(notes.getMatiere());
+        if (notes.getMatiere() != null) {
+            dto.setMatiereId(notes.getMatiere().getId());
+            dto.setMatiereNom(notes.getMatiere().getNom());
+        }
         if (notes.getEleve() != null) {
             dto.setEleveId(notes.getEleve().getId());
+            dto.setEleveNom(notes.getEleve().getPrenom() + " " + notes.getEleve().getNom());
         }
-        if (notes.getSeance() != null) {
-            dto.setSeanceId(notes.getSeance().getId());
-        }
+
         return dto;
     }
 
@@ -86,13 +84,13 @@ public class NotesController {
         Notes notes = new Notes();
         notes.setId(dto.getId()); // valuable for updates
         notes.setValeur(dto.getValeur());
-        notes.setMatiere(dto.getMatiere());
+        if (dto.getMatiereId() != null) {
+            matiereService.getMatiereById(dto.getMatiereId()).ifPresent(notes::setMatiere);
+        }
         if (dto.getEleveId() != null) {
             eleveService.getEleveById(dto.getEleveId()).ifPresent(notes::setEleve);
         }
-        if (dto.getSeanceId() != null) {
-            seanceService.getSeanceById(dto.getSeanceId()).ifPresent(notes::setSeance);
-        }
+
         return notes;
     }
 }

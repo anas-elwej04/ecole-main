@@ -38,6 +38,10 @@ public class EnseignantService {
             enseignant.setPrenom(enseignantDetails.getPrenom());
             enseignant.setEmail(enseignantDetails.getEmail());
             enseignant.setSalles(enseignantDetails.getSalles());
+            enseignant.setMatiere(enseignantDetails.getMatiere());
+            if (enseignantDetails.getPassword() != null && !enseignantDetails.getPassword().isEmpty()) {
+                enseignant.setPassword(passwordEncoder.encode(enseignantDetails.getPassword()));
+            }
             return enseignantRepository.save(enseignant);
         }).orElse(null);
     }

@@ -6,7 +6,6 @@ import lombok.Data;
 public class MatiereDTO {
     private Long id;
     private String nom;
-    private String code;
     private int charges;
+    private Double coefficient;
 }
-

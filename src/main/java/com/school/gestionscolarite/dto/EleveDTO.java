@@ -12,4 +12,5 @@ public class EleveDTO {
     private String adresse;
     private String classe;
     private Long parentId; // juste l'id du parent
+    private Double moyenneGenerale;
 }

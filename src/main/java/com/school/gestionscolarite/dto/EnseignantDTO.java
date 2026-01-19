@@ -12,4 +12,6 @@ public class EnseignantDTO {
     private String email;
     private String password;
     private List<Long> salleIds; // liste des ids des salles liées
+    private Long matiereId;
+    private MatiereDTO matiere;
 }

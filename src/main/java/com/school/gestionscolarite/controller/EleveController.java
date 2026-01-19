@@ -2,6 +2,8 @@ package com.school.gestionscolarite.controller;
 
 import com.school.gestionscolarite.dto.EleveDTO;
 import com.school.gestionscolarite.entity.Eleve;
+import com.school.gestionscolarite.entity.Notes;
+import com.school.gestionscolarite.repository.NotesRepository;
 import com.school.gestionscolarite.service.EleveService;
 import com.school.gestionscolarite.service.ParentService;
 import org.springframework.http.ResponseEntity;
@@ -17,10 +19,12 @@ public class EleveController {
 
     private final EleveService eleveService;
     private final ParentService parentService;
+    private final NotesRepository notesRepository;
 
-    public EleveController(EleveService eleveService, ParentService parentService) {
+    public EleveController(EleveService eleveService, ParentService parentService, NotesRepository notesRepository) {
         this.eleveService = eleveService;
         this.parentService = parentService;
+        this.notesRepository = notesRepository;
     }
 
     @GetMapping
@@ -73,6 +77,31 @@ public class EleveController {
         if (eleve.getParent() != null) {
             dto.setParentId(eleve.getParent().getId());
         }
+
+        // --- CALCUL DE LA MOYENNE GENERALE ---
+        List<Notes> notesList = notesRepository.findByEleveId(eleve.getId());
+        if (!notesList.isEmpty()) {
+            double someNoteFoisCoef = 0.0;
+            double someCoefs = 0.0;
+
+            for (Notes note : notesList) {
+                if (note.getValeur() != null && note.getMatiere() != null
+                        && note.getMatiere().getCoefficient() != null) {
+                    someNoteFoisCoef += note.getValeur() * note.getMatiere().getCoefficient();
+                    someCoefs += note.getMatiere().getCoefficient();
+                }
+            }
+
+            if (someCoefs > 0) {
+                // Arrondir à 2 chiffres après la virgule si souhaité, ici brut
+                dto.setMoyenneGenerale(someNoteFoisCoef / someCoefs);
+            } else {
+                dto.setMoyenneGenerale(0.0);
+            }
+        } else {
+            dto.setMoyenneGenerale(0.0);
+        }
+
         return dto;
     }
 

@@ -10,18 +10,27 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/auth")
 @RequiredArgsConstructor
 public class AuthController {
 
     private final AuthenticationManager authenticationManager;
 
-    @PostMapping("/login")
+    // Login endpoint for frontend compatibility
+    @PostMapping("/api/login")
+    public ResponseEntity<?> loginDirect(@RequestBody LoginRequest loginRequest) {
+        return performLogin(loginRequest);
+    }
+
+    // Original auth login endpoint
+    @PostMapping("/api/auth/login")
     public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
+        return performLogin(loginRequest);
+    }
+
+    private ResponseEntity<?> performLogin(LoginRequest loginRequest) {
         System.out.println("Login request received for: " + loginRequest.getEmail());
 
         if (loginRequest.getEmail() == null || loginRequest.getEmail().isBlank()) {

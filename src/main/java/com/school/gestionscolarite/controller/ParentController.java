@@ -69,6 +69,7 @@ public class ParentController {
         dto.setNom(parent.getNom());
         dto.setPrenom(parent.getPrenom());
         dto.setTelephone(parent.getTelephone());
+        dto.setEmail(parent.getEmail());
         dto.setPassword(parent.getPassword());
         if (parent.getEleves() != null) {
             dto.setEleveIds(parent.getEleves().stream()
@@ -84,6 +85,7 @@ public class ParentController {
         parent.setNom(dto.getNom());
         parent.setPrenom(dto.getPrenom());
         parent.setTelephone(dto.getTelephone());
+        parent.setEmail(dto.getEmail());
         parent.setPassword(dto.getPassword());
         if (dto.getEleveIds() != null) {
             List<Eleve> eleves = new ArrayList<>();

@@ -6,7 +6,9 @@ import lombok.Data;
 public class NotesDTO {
     private Long id;
     private Double valeur;
-    private String matiere;
-    private Long eleveId;   // juste l'id de l'élève pour éviter de renvoyer tout l'objet
-    private Long seanceId;  // idem pour séance
+    private Long matiereId;
+    private String matiereNom;
+    private Long eleveId;
+    private String eleveNom;
+    private String date;
 }

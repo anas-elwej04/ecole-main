@@ -33,6 +33,7 @@ public class SeanceService {
             seance.setDateHeureDebut(seanceDetails.getDateHeureDebut());
             seance.setDateHeureFin(seanceDetails.getDateHeureFin());
             seance.setMatiere(seanceDetails.getMatiere());
+            seance.setEnseignant(seanceDetails.getEnseignant());
             seance.setSalle(seanceDetails.getSalle());
             return seanceRepository.save(seance);
         }).orElse(null);

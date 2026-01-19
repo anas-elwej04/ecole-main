@@ -9,6 +9,10 @@ public class SeanceDTO {
     private Long id;
     private LocalDateTime dateHeureDebut;
     private LocalDateTime dateHeureFin;
-    private String matiere;
-    private Long salleId;  // id de la salle liée
+    private Long matiereId;
+    private String matiereNom;
+    private Long enseignantId;
+    private String enseignantNom;
+    private Long salleId;
+    private String salleNom;
 }

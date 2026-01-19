@@ -1,6 +1,5 @@
 package com.school.gestionscolarite.service;
 
-
 import com.school.gestionscolarite.entity.Notes;
 import com.school.gestionscolarite.repository.NotesRepository;
 import org.springframework.stereotype.Service;
@@ -35,7 +34,7 @@ public class NotesService {
                     note.setValeur(notesDetails.getValeur());
                     note.setMatiere(notesDetails.getMatiere());
                     note.setEleve(notesDetails.getEleve());
-                    note.setSeance(notesDetails.getSeance());
+
                     return notesRepository.save(note);
                 })
                 .orElse(null);
@@ -45,4 +44,3 @@ public class NotesService {
         notesRepository.deleteById(id);
     }
 }
-
